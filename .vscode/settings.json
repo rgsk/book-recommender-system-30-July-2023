@@ -1,0 +1,28 @@
+{
+  // below is required to show red squiggles by mypy linter
+  "python.linting.mypyEnabled": true,
+  "editor.codeActionsOnSave": {
+    // below reorders the import statements
+    // for eg - lib imports before local imports
+    "source.organizeImports": true
+  },
+  "saveAndRunExt": {
+    // below triggers the autoflake extension to remove unused imports
+    // not for below to work autoflake must be installed globally (it doesn't takes up autoflake installed in venv)
+    "commands": [
+      {
+        "match": ".*\\.py",
+        "isShellCommand": false,
+        "cmd": "autoflake.removeUnused"
+      }
+    ]
+  },
+  "python.linting.enabled": true,
+
+  // below ensures that python suggestions are loaded
+  "python.analysis.autoImportCompletions": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none"
+}
