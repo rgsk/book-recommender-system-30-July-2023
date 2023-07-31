@@ -2,6 +2,7 @@ import pickle
 
 import numpy as np
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pandas import DataFrame
 
 popular_df: DataFrame = pickle.load(open('./model_exports/popular.pkl', 'rb'))
@@ -32,6 +33,21 @@ def recommend(book_name: str, number_of_recommendations: int):
 
 app = FastAPI()
 
+# Set up CORS settings
+origins = [
+    "http://localhost:3000",
+    # Add more origins as needed
+]
+
+# Add the CORS middleware to your FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def get_root():
@@ -39,12 +55,16 @@ def get_root():
 
 
 @app.get('/book-names')
-def get_book_names(offset: int = 0, limit: int = 100):
+def get_book_names(query: str = "", offset: int = 0, limit: int = 100):
     total_count = len(books)
-    names = books['Book-Title'].tolist()
+    names: list[str] = books['Book-Title'].tolist()
+    lowercased_query = query.lower()
+    filtered_names = [
+        name for name in names if name.lower().startswith(lowercased_query)
+    ]
     return {
         "total": total_count,
-        "names": names[offset: offset + limit]
+        "names": filtered_names[offset: offset + limit]
     }
 
 

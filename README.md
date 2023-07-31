@@ -2,6 +2,12 @@
 
 [https://documenter.getpostman.com/view/21962531/2s9XxtxaNc](https://documenter.getpostman.com/view/21962531/2s9XxtxaNc)
 
+## run the api locally
+
+```
+uvicorn main:app --reload
+```
+
 ## To create new virtual environment run
 
 `python -m venv {name}`
