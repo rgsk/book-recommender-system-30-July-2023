@@ -15,6 +15,7 @@ similarity_score: np.ndarray = pickle.load(
 def recommend(book_name: str, number_of_recommendations: int):
     if len(np.where(pt.index == book_name)[0]) == 0:
         # book_name not found
+        print(f"no book with name {book_name}")
         return []
     index = np.where(pt.index == book_name)[0][0]
     distances = similarity_score[index]
@@ -36,6 +37,7 @@ app = FastAPI()
 # Set up CORS settings
 origins = [
     "http://localhost:3000",
+    "http://localhost:3001",
     # Add more origins as needed
 ]
 
@@ -56,8 +58,8 @@ def get_root():
 
 @app.get('/book-names')
 def get_book_names(query: str = "", offset: int = 0, limit: int = 100):
-    total_count = len(books)
-    names: list[str] = books['Book-Title'].tolist()
+    total_count = len(pt.index)
+    names: list[str] = pt.index.tolist()
     lowercased_query = query.lower()
     filtered_names = [
         name for name in names if name.lower().startswith(lowercased_query)
